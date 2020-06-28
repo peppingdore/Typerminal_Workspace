@@ -1,3 +1,6 @@
+# This is small 'build system' that i use to build Typerminal itself and my second personal project.
+
+
 import sys
 import os
 import ascii_colors
