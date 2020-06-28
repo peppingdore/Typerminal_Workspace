@@ -92,7 +92,7 @@ def main():
 
 	builder.build(build_options)
 
-	print(f'Build tool: {time.perf_counter() - build_start_time} seconds')
+	print(f'Build took: {time.perf_counter() - build_start_time} seconds')
 
 
 if __name__ == '__main__':
