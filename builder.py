@@ -49,6 +49,11 @@ class Build_Options:
 		self.output_assembly = False
 
 
+class Build_Result:
+	def __init__(self):
+		self.success = False
+		self.executable_path = None
+
 
 
 root_dir = ''
@@ -57,6 +62,8 @@ src_dir = ''
 
 
 def build(build_options):
+
+	result = Build_Result()
 
 	global root_dir
 	global intermidiate_dir
@@ -131,7 +138,7 @@ def build(build_options):
 		thread.join()
 
 	if any_failed_source or build_options.output_assembly:
-		return
+		return result
 
 
 
@@ -151,6 +158,11 @@ def build(build_options):
 
 	if succeeded:
 		print(f'{ascii_colors.yellow}{get_linker_output_path(build_options)}{ascii_colors.reset_foreground_color}\n')
+
+	result.success = True
+	result.executable_path = get_linker_output_path(build_options)
+
+	return result
 
 
 def get_asm_output_path(source):

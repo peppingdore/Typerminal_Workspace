@@ -5,6 +5,8 @@ import subprocess
 
 # For llvm-mca
 os.environ["PATH"] += r'E:\llvm\build\Debug\bin' + os.pathsep
+os.environ["PATH"] += r'E:\Programs' + os.pathsep
+
 
 
 import builder
@@ -13,28 +15,31 @@ import hot_reloader
 hot_reloader.watch_module(builder)
 
 
+typer_ship_folder = "E:/Typer_Ship"
+
+typer_dev_folder = "E:/Typer"
+typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
+
+
+
 
 def copy_typer_to_ship():
-	folder = "E:/Typer_Ship"
-
 	try:
-		typer_commands.rmdir(folder, with_content = True)
+		typer_commands.rmdir(typer_ship_folder, with_content = True)
 	except:
 		pass
 		
-	typer_commands.mkdir(folder)
-
-	typer_dir = os.path.dirname(sys.executable)
+	typer_commands.mkdir(typer_ship_folder)
 
 	try:
-		typer_commands.rmdir(os.path.join(typer_dir, "python/__pycache__"), with_content = True)
-		typer_commands.rmdir(os.path.join(typer_dir, "user_scripts/__pycache__"), with_content = True)
+		typer_commands.rmdir(os.path.join(typer_dev_runnable_folder, "python/__pycache__"), with_content = True)
+		typer_commands.rmdir(os.path.join(typer_dev_runnable_folder, "user_scripts/__pycache__"), with_content = True)
 	except:
 		pass
 
-	typer_commands.copy_directory(os.path.join(typer_dir, "fonts"),        os.path.join(folder, "fonts"))
-	typer_commands.copy_directory(os.path.join(typer_dir, "python"),       os.path.join(folder, "python"))
-	typer_commands.copy_directory(os.path.join(typer_dir, "user_scripts"), os.path.join(folder, "user_scripts"))
+	typer_commands.copy_directory(os.path.join(typer_dev_runnable_folder, "fonts"),        os.path.join(typer_ship_folder, "fonts"))
+	typer_commands.copy_directory(os.path.join(typer_dev_runnable_folder, "python"),       os.path.join(typer_ship_folder, "python"))
+	typer_commands.copy_directory(os.path.join(typer_dev_runnable_folder, "user_scripts"), os.path.join(typer_ship_folder, "user_scripts"))
 
 	root_files_to_copy = [
 		'freetype.dll',
@@ -43,13 +48,13 @@ def copy_typer_to_ship():
 		'python38.dll',
 		'python38.zip',
 		'dbghelp.dll',
-		'Typer.exe',
-		'Typer.pdb'
+		'Typerminal.exe',
+		'Typerminal.pdb'
 	]
 
 
 	for file in root_files_to_copy:
-		typer_commands.copy_file(os.path.join(typer_dir, file), os.path.join(folder, file))
+		typer_commands.copy_file(os.path.join(typer_dev_runnable_folder, file), os.path.join(typer_ship_folder, file))
 
 
 
@@ -107,3 +112,10 @@ def print_directory_tree(path = '.', max_depth = 5):
 
 	
 	traverse(path, 0)
+
+
+# This is example of astonishing laziness
+def prepare_typer_dev_environment():
+	run_vcvarsall('x64')
+
+	typer_commands.cd('E:/Typer')
