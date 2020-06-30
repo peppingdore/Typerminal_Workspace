@@ -80,7 +80,7 @@ def find_vcvars_location():
 
 	print(f"Found VS at: {vs_path}\n")
 
-	vcvars_path = os.path.join(vs_path, r"VC/Auxiliary/Build/")
+	vcvars_path = os.path.join(vs_path, 'VC\\Auxiliary\\Build\\')
 	if not os.path.exists(vcvars_path):
 		raise EnvironmentError("vcvars directory doesn't exist: %s", vcvars_path)
 
@@ -114,8 +114,13 @@ def print_directory_tree(path = '.', max_depth = 5):
 	traverse(path, 0)
 
 
-# This is example of astonishing laziness
 def prepare_typer_dev_environment():
 	run_vcvarsall('x64')
 
 	typer_commands.cd('E:/Typer')
+
+
+def prepare_vis_dev_environment():
+	run_vcvarsall('x64')
+
+	typer_commands.cd('E:/Vis')
