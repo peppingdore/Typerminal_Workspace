@@ -48,6 +48,8 @@ class Build_Options:
 
 		self.output_assembly = False
 
+		self.print_source_compilation_time = False
+
 
 class Build_Result:
 	def __init__(self):
@@ -81,6 +83,13 @@ def build(build_options):
 
 	threads = []
 
+
+
+	max_source_length = 30
+	max_source_length_without_ellipsis = max_source_length - len('...')
+	max_actual_source_length = min((max(map(lambda x: len(x), build_options.sources), default = 0), max_source_length))
+
+
 	for source in build_options.sources:
 
 		cmd_line = build_clang_command_line_for_source(build_options, source)
@@ -88,8 +97,12 @@ def build(build_options):
 		print_result_lock = threading.Lock()
 
 		def build_thread_proc(source):
-			run_result = subprocess.run(cmd_line, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL)
 			
+			source_compilation_start_time = time.perf_counter()
+			run_result = subprocess.run(cmd_line, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL)
+			source_compilation_time = time.perf_counter() - source_compilation_start_time
+
+
 			print_result_lock.acquire()
 
 			succeeded = run_result.returncode == 0
@@ -103,9 +116,20 @@ def build(build_options):
 			file_name_background_rgb = (20, 150, 0) if succeeded else (200, 20, 0)
 
 
-			file_name_to_print = source
+
+			file_name_to_print = ''
+			
+			if len(source) >= max_source_length_without_ellipsis:
+				file_name_to_print += source[:max_source_length_without_ellipsis]
+				file_name_to_print += '...'
+			else:
+				file_name_to_print += source
+				for i in range(max_actual_source_length - len(source)):
+					file_name_to_print += ' '
+
+
 			if not succeeded:
-				file_name_to_print += " (FAILED) "
+				file_name_to_print += " (FAILED)    "
 			else:
 				file_name_to_print += " (SUCCEEDED) "
 				
@@ -114,6 +138,8 @@ def build(build_options):
 					file_name_to_print += f' -> {get_asm_output_path(source)}  '
 
 
+			if build_options.print_source_compilation_time:
+				file_name_to_print += "  {:.2f} s ".format(source_compilation_time)
 
 
 

@@ -64,7 +64,9 @@ def main():
 		'Main.cpp',
 		'UI.cpp',
 		'Renderer.cpp',
-		'Settings.cpp'
+		'Settings.cpp',
+		'Python_Debugger.cpp',
+		'Python_Interp.cpp',
 	]
 
 	build_options.include_directories = [
@@ -81,6 +83,8 @@ def main():
 	]
 
 
+
+	build_options.print_source_compilation_time = True
 
 
 	build_options.use_clang_cl = True
@@ -121,7 +125,7 @@ def main():
 	result = builder.build(build_options)
 	if result.success:
 		icon_success = subprocess.run(f'rcedit "{result.executable_path}" --set-icon "{os.path.join(os.path.dirname(__file__), "../exe_icon.ico")}"').returncode == 0
-		print(f'{(ascii_colors.green if icon_success else ascii_colors.red).background}Setting icon for executable {"SUCCEEDED" if icon_success else "FAILED"}{ascii_colors.reset_background_color}')
+		print(f'{(ascii_colors.green if icon_success else ascii_colors.red).foreground}Setting icon for executable {"SUCCEEDED" if icon_success else "FAILED"}{ascii_colors.reset_foreground_color}')
 
 
 

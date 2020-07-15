@@ -3,12 +3,13 @@ import sys
 import typer_commands
 import subprocess
 
+
 # For llvm-mca
 os.environ["PATH"] += r'E:\llvm\build\Debug\bin' + os.pathsep
 os.environ["PATH"] += r'E:\Programs' + os.pathsep
 
 
-
+import command_time_printer
 import builder
 import hot_reloader
 
@@ -96,11 +97,20 @@ def print_directory_tree(path = '.', max_depth = 5):
 
 	path = os.path.abspath(os.path.normpath(path))
 
+	did_trigger_breakpoint = False
+
 	def traverse(path, depth):
-		
+		nonlocal did_trigger_breakpoint
+
 		indent = ''
 		for i in range(depth):
 			indent += '\t'
+
+		if depth > 3 and not did_trigger_breakpoint:
+			import traceback
+			did_trigger_breakpoint = True;
+			breakpoint()
+
 
 		if depth >= max_depth: return
 
@@ -110,17 +120,76 @@ def print_directory_tree(path = '.', max_depth = 5):
 				if entry.is_dir():
 					traverse(entry.path, depth + 1)
 
-	
 	traverse(path, 0)
 
 
-def prepare_typer_dev_environment():
+def typer_dev():
 	run_vcvarsall('x64')
 
 	typer_commands.cd('E:/Typer')
 
 
-def prepare_vis_dev_environment():
+def vis_dev():
 	run_vcvarsall('x64')
 
 	typer_commands.cd('E:/Vis')
+
+def open_sublime_text_packages_folder():
+	assert(os.name == 'nt')
+	
+	st_path = os.path.join(os.environ["APPDATA"], 'Sublime Text 3')
+	os.startfile(st_path)
+
+def tlauncher():
+	assert(os.name == 'nt')
+	
+	st_path = os.path.join(os.environ["APPDATA"], '.minecraft/tlauncher.exe')
+	os.startfile(st_path)
+
+def count_typer_lines():
+	saved_cwd = os.getcwd();
+
+	os.chdir("E:/Typer")
+
+	try:
+		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft --include-ext=h,cpp --exclude-list-file=cloc_skipped_files.txt --by-file src", stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
+	finally:
+		os.chdir(saved_cwd)
+
+
+
+
+def debugger_test():
+	breakpoint()
+
+	def b(arg_a, arg_b, sys_module, *varargs, **kwargs):
+		print(varargs)
+		breakpoint()
+		
+		for it in kwargs:
+			print(it)
+
+
+	def a(a_arg, b_arg):
+		print(a_arg)
+		print(b_arg)
+
+		b(a_arg, b_arg, sys, "1 str", "2 str", 3, 4, a, dick = "suck", gachi = "bass", b_sys = sys)
+
+
+	a('argument a', 'argument b')
+
+
+def test():
+	for x in range(100):
+		print(f'{x=}\n')
+
+	i = 4 * 3
+	breakpoint()
+	print(f"hut {i}")
+
+def print_some_text():
+	for i in range(600):
+		sys.stdout.write(f"text {i}")
+
+
