@@ -2,11 +2,38 @@ import os
 import sys
 import typer_commands
 import subprocess
+import typer
+from pathlib import Path
+import ascii_colors
+import time
 
 
-# For llvm-mca
-os.environ["PATH"] += r'E:\llvm\build\Debug\bin' + os.pathsep
-os.environ["PATH"] += r'E:\Programs' + os.pathsep
+additional_path_entries = [
+	r'E:\llvm\build\Debug\bin', # For llvm-mca
+	r'E:\Programs',
+	r'E:\vcpkg',
+]
+
+for ent in additional_path_entries:
+	os.environ["PATH"] += ent + os.pathsep
+
+
+
+def b_prompt():
+
+	current_path = Path.cwd().resolve()
+	sys.stdout.write(f'{ascii_colors.yellow}{current_path}{ascii_colors.reset_foreground_color}')
+
+
+	current_branch = subprocess.run('git branch --show-current', stdout = subprocess.PIPE).stdout.decode('utf-8')
+	current_branch = current_branch.rstrip('\n')
+
+	if len(current_branch):
+		sys.stdout.write(f' {ascii_colors.green.background}{current_branch}{ascii_colors.reset_background_color}')
+
+	sys.stdout.write(' $ ')
+
+typer.prompt = b_prompt
 
 
 import command_time_printer
