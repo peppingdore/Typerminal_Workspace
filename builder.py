@@ -50,6 +50,8 @@ class Build_Options:
 
 		self.print_source_compilation_time = False
 
+		self.additional_clang_flags = []
+
 
 class Build_Result:
 	def __init__(self):
@@ -316,6 +318,11 @@ def build_clang_command_line_for_source(build_options, source):
 			add_flag('-c')
 
 
+	for clang_flag in build_options.additional_clang_flags:
+		if build_options.use_clang_cl:
+			add_flag(f'-clang:{clang_flag}')
+		else:
+			add_flag(clang_flag)
 
 
 	if not build_options.use_clang_cl:
