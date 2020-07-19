@@ -200,7 +200,7 @@ def debugger_test():
 		print(a_arg)
 		print(b_arg)
 
-		b(a_arg, b_arg, sys, "1 str", "2 str", 3, 4, a, dick = "suck", gachi = "bass", b_sys = sys)
+		b(a_arg, b_arg, sys, "1 str", "2 str", 3, 4, a, sys, dick = "suck", gachi = "bass", b_sys = sys)
 
 
 	a('argument a', 'argument b')
