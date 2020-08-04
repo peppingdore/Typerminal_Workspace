@@ -3,12 +3,14 @@
 
 import sys
 import os
-import ascii_colors
 import subprocess
 import types
 import threading
 import time
 from pathlib import Path
+
+import ascii_colors
+
 
 class Build_Options:
 	def __init__(self):
@@ -51,6 +53,7 @@ class Build_Options:
 		self.print_source_compilation_time = False
 
 		self.additional_clang_flags = []
+		self.additional_linker_flags = []
 
 
 class Build_Result:
@@ -233,6 +236,14 @@ def build_linker_command_line(build_options):
 		cmd += f' /clang:--output="{linker_output_path}"'
 	else:
 		cmd += f' --output="{linker_output_path}"'
+
+
+	for clang_flag in build_options.additional_linker_flags:
+		if build_options.use_clang_cl:
+			cmd += f' /clang:{clang_flag} '
+		else:
+			cmd += f' {clang_flag} '
+
 
 
 	#cmd += f' -v '

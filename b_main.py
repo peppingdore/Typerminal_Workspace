@@ -12,6 +12,7 @@ additional_path_entries = [
 	r'E:\llvm\build\Debug\bin', # For llvm-mca
 	r'E:\Programs',
 	r'E:\vcpkg',
+	r'C:\VulkanSDK\\1.2.135.0\\Bin'
 ]
 
 for ent in additional_path_entries:
@@ -19,25 +20,13 @@ for ent in additional_path_entries:
 
 
 
-def b_prompt():
-
-	current_path = Path.cwd().resolve()
-	sys.stdout.write(f'{ascii_colors.yellow}{current_path}{ascii_colors.reset_foreground_color}')
-
-	current_branch = subprocess.run('git branch --show-current', stdout = subprocess.PIPE).stdout.decode('utf-8')
-	current_branch = current_branch.rstrip('\n')
-
-	if len(current_branch):
-		sys.stdout.write(f' {ascii_colors.green.background}{current_branch}{ascii_colors.reset_background_color}')
-
-	sys.stdout.write(' $ ')
-
-typer.prompt = b_prompt
-
-
-import command_time_printer
 import builder
 import hot_reloader
+
+#import command_time_printer
+import b_prompt
+import b_syntax_proc
+
 
 hot_reloader.watch_module(builder)
 
@@ -186,8 +175,6 @@ def count_typer_lines():
 
 
 def debugger_test():
-	breakpoint()
-
 	def b(arg_a, arg_b, sys_module, *varargs, **kwargs):
 		print(varargs)
 		breakpoint()
@@ -204,6 +191,12 @@ def debugger_test():
 
 
 	a('argument a', 'argument b')
+	
+	import threading
+	t = threading.Thread(target = a, args = ('thread 2 b', 'thread 2 a'))
+	t.start()
+	t.join()
+
 
 
 def test():
