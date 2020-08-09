@@ -8,15 +8,19 @@ import ascii_colors
 import time
 
 
-additional_path_entries = [
-	r'E:\llvm\build\Debug\bin', # For llvm-mca
-	r'E:\Programs',
-	r'E:\vcpkg',
-	r'C:\VulkanSDK\\1.2.135.0\\Bin'
-]
+if os.name == 'nt':
+	additional_path_entries = [
+		r'E:\llvm\build\Debug\bin', # For llvm-mca
+		r'E:\Programs',
+		r'E:\vcpkg',
+		r'C:\VulkanSDK\\1.2.135.0\\Bin'
+	]
 
-for ent in additional_path_entries:
-	os.environ["PATH"] += ent + os.pathsep
+	for ent in additional_path_entries:
+		os.environ["PATH"] += ent + os.pathsep
+
+if os.name == 'posix':
+	os.environ['PATH'] += os.pathsep + '/snap/bin'
 
 
 
