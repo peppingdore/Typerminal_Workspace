@@ -6,6 +6,7 @@ import typer
 from pathlib import Path
 import ascii_colors
 import time
+import platform
 
 
 if os.name == 'nt':
@@ -168,10 +169,15 @@ def tlauncher():
 def count_typer_lines():
 	saved_cwd = os.getcwd();
 
-	os.chdir("E:/Typer")
+	pc_name = platform.node()
+
+	if pc_name == 'DESKTOP-EIUG5MQ':
+		os.chdir("E:/Typer")
+	elif pc_name == 'fridge':
+		os.chdir("/home/peppingdore/Typerminal")
 
 	try:
-		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft --include-ext=h,cpp --exclude-list-file=cloc_skipped_files.txt --by-file src", stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
+		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip --include-ext=h,cpp  --by-file src/b_lib/. src", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
 	finally:
 		os.chdir(saved_cwd)
 
