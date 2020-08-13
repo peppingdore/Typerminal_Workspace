@@ -222,3 +222,8 @@ def print_some_text():
 		sys.stdout.write(f"text {i}")
 
 
+def reboot():
+	if os.name == 'nt':
+		os.system("shutdown /r")
+	else:
+		raise NotImplementedError
