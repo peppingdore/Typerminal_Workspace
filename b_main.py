@@ -226,4 +226,4 @@ def reboot():
 	if os.name == 'nt':
 		os.system("shutdown /r")
 	else:
-		raise NotImplementedError
+		os.system("reboot now")
