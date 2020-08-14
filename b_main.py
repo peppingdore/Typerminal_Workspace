@@ -32,6 +32,9 @@ import hot_reloader
 import b_prompt
 import b_syntax_proc
 
+hot_reloader.watch_module(b_prompt)
+hot_reloader.watch_module(b_syntax_proc)
+
 
 hot_reloader.watch_module(builder)
 

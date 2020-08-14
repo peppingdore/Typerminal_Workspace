@@ -4,6 +4,8 @@ import typer
 import subprocess
 from pathlib import Path
 import ascii_colors
+import time
+from datetime import datetime
 
 def get_active_branch_name():
 
@@ -14,7 +16,33 @@ def get_active_branch_name():
         if line[0:4] == "ref:":
             return line.partition("refs/heads/")[2]
 
+# Error is ~4 hours i think
+birth_date = datetime.fromisoformat('2001-04-19T16:00:00.000000')
+
+def days_since_birth():
+	delta_date = datetime.today() - birth_date 
+	return delta_date.days
+
+'''
+def to_year_fraction(date):
+    def since_epoch(date): # returns seconds since epoch
+        return time.mktime(date.timetuple())
+
+    year = date.year
+    startOfThisYear = dt(year=year, month=1, day=1)
+    startOfNextYear = dt(year=year+1, month=1, day=1)
+
+    yearElapsed = since_epoch(date) - since_epoch(startOfThisYear)
+    yearDuration = since_epoch(startOfNextYear) - since_epoch(startOfThisYear)
+    fraction = yearElapsed/yearDuration
+
+    return date.year + fraction
+'''
+
 def b_prompt():
+
+	sys.stdout.write(f'Day №{days_since_birth()} ')
+
 	current_path = Path.cwd().resolve()
 	sys.stdout.write(f'{ascii_colors.yellow}{current_path}{ascii_colors.reset_foreground_color}')
 
