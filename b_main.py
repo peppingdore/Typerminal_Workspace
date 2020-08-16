@@ -29,10 +29,14 @@ import builder
 import hot_reloader
 
 #import command_time_printer
-import b_prompt
+if True:
+	import b_prompt
+	hot_reloader.watch_module(b_prompt)
+else:
+	import run_only_wsl
+
 import b_syntax_proc
 
-hot_reloader.watch_module(b_prompt)
 hot_reloader.watch_module(b_syntax_proc)
 
 
