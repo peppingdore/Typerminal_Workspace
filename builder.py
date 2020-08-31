@@ -55,6 +55,8 @@ class Build_Options:
 		self.additional_clang_flags = []
 		self.additional_linker_flags = []
 
+		self.natvis_files = []
+
 
 class Build_Result:
 	def __init__(self):
@@ -221,6 +223,12 @@ def build_linker_command_line(build_options):
 	cmd += ' -fuse-ld=lld-link '
 
 
+	for it in build_options.natvis_files:
+		assert(os.name == 'nt')
+		
+		cmd += f' -clang:--for-linker=/natvis:"{os.path.join(src_dir, it)}" '
+
+
 	if build_options.use_clang_cl:
 		cmd += f' {get_windows_crt_variant(build_options)} '
 
@@ -301,6 +309,8 @@ def build_clang_command_line_for_source(build_options, source):
 		cmd += '  /TP ' # Compile as C++
 		cmd += f' {get_windows_crt_variant(build_options)} '
 
+
+	# cmd += ' -ferror-limit=0 '
 
 
 	# Typerminal doesn't support support Windows Console API coloring stuff. 
