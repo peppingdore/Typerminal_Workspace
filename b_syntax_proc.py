@@ -1,9 +1,11 @@
 import typer
 import typer_commands
 import os
+import sys
 
 def syntax_proc(input, globals):
-	if not input: return
+	if not input:
+		return
 
 	if input.startswith('#'):
 		eval_string = input[1:]

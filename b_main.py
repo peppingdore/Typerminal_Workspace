@@ -234,3 +234,8 @@ def reboot():
 		os.system("shutdown /r")
 	else:
 		os.system("reboot now")
+
+
+
+def run_conhost_bypass(cmd):
+	subprocess.run(cmd, stdout = sys.stdout, stderr = subprocess.STDOUT, stdin = sys.stdin)
