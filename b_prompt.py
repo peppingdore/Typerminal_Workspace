@@ -9,12 +9,22 @@ from datetime import datetime
 
 def get_active_branch_name():
 
-    head_dir = Path(".") / ".git" / "HEAD"
-    with head_dir.open("r") as f: content = f.read().splitlines()
+	directory_stack = []
+	directory_stack.append(Path.cwd())
+	directory_stack.extend(Path.cwd().parents)
+	
+	for directory in directory_stack:
+		head_dir = directory / ".git" / "HEAD"
+		try:
+			with head_dir.open("r") as f: content = f.read().splitlines()
 
-    for line in content:
-        if line[0:4] == "ref:":
-            return line.partition("refs/heads/")[2]
+			for line in content:
+				if line[0:4] == "ref:":
+					return line.partition("refs/heads/")[2]
+		except:
+			pass
+
+	return ''
 
 # Error is ~4 hours i think
 birth_date = datetime.fromisoformat('2001-04-19T16:00:00.000000')
