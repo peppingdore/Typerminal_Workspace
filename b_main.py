@@ -11,10 +11,11 @@ import platform
 
 if os.name == 'nt':
 	additional_path_entries = [
-		r'E:\llvm\build\Debug\bin', # For llvm-mca
-		r'E:\Programs',
-		r'E:\vcpkg',
-		r'C:\VulkanSDK\\1.2.135.0\\Bin'
+		r'E:\\llvm\\build\\Debug\\bin', # For llvm-mca
+		r'E:\\Programs',
+		r'E:\\vcpkg',
+		r'C:\\VulkanSDK\\1.2.135.0\\Bin',
+		r'C:\\Program Files\\Far Manager'
 	]
 
 	for ent in additional_path_entries:
@@ -124,28 +125,35 @@ def print_directory_tree(path = '.', max_depth = 5):
 
 	path = os.path.abspath(os.path.normpath(path))
 
-	did_trigger_breakpoint = False
-
 	def traverse(path, depth):
-		nonlocal did_trigger_breakpoint
 
 		indent = ''
-		for i in range(depth):
+		for i in range(depth + 1):
 			indent += '\t'
-
-		if depth > 3 and not did_trigger_breakpoint:
-			import traceback
-			did_trigger_breakpoint = True;
-			breakpoint()
-
 
 		if depth >= max_depth: return
 
-		with os.scandir(path) as it:
-			for entry in it:
-				print(f'{indent}{entry.name}')
-				if entry.is_dir():
-					traverse(entry.path, depth + 1)
+
+		try:
+			with os.scandir(path) as it:
+
+				entry_index = 0
+
+				for entry in it:
+					sys.stdout.write(indent)
+
+					if entry_index == 0:
+						sys.stdout.write(f'|- |-{entry.name}\n')
+					else:
+						sys.stdout.write(f'\t|-{entry.name}\n')
+					
+					if entry.is_dir():
+						traverse(entry.path, depth + 1)
+
+					entry_index += 1
+		except:
+			pass
+
 
 	traverse(path, 0)
 
@@ -239,3 +247,7 @@ def reboot():
 
 def run_conhost_bypass(cmd):
 	subprocess.run(cmd, stdout = sys.stdout, stderr = subprocess.STDOUT, stdin = sys.stdin)
+
+
+def copy_typer_exe_to_ship():
+	typer_commands.copy_file("E:/Typer/Runnable/Typerminal.exe", "E:/Typer_Ship/Typerminal.exe")
