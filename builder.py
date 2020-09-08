@@ -12,6 +12,11 @@ from pathlib import Path
 import ascii_colors
 
 
+class Library:
+	def __init__(self, name, link_statically = False):
+		self.name = name
+		self.link_statically = link_statically
+
 class Build_Options:
 	def __init__(self):
 		self.disable_warnings = False
@@ -34,6 +39,8 @@ class Build_Options:
 		self.include_directories = []
 
 		self.lib_directories = []
+
+		self.libraries = []
 
 		self.defines = []
 
@@ -72,6 +79,14 @@ src_dir = ''
 
 def build(build_options):
 
+	if os.name != 'nt':
+		assert(not build_options.use_clang_cl)
+		assert(not build_options.use_windows_dynamic_crt)
+		assert(not build_options.use_windows_crt_debug_version)
+		assert(not build_options.use_windows_subsystem)
+
+
+
 	result = Build_Result()
 
 	global root_dir
@@ -106,7 +121,7 @@ def build(build_options):
 		def build_thread_proc(source):
 			
 			source_compilation_start_time = time.perf_counter()
-			run_result = subprocess.run(cmd_line, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL)
+			run_result = subprocess.run(cmd_line, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL, shell = True)
 			source_compilation_time = time.perf_counter() - source_compilation_start_time
 
 
@@ -175,7 +190,7 @@ def build(build_options):
 
 
 
-	run_result = subprocess.run(build_linker_command_line(build_options), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL)
+	run_result = subprocess.run(build_linker_command_line(build_options), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL, shell = True)
 	succeeded = run_result.returncode == 0
 
 	linking_result_title_background = (20, 150, 0) if succeeded else (200, 20, 0)
@@ -220,13 +235,15 @@ def build_linker_command_line(build_options):
 
 	cmd += f' {linker_inputs} '
 
-	cmd += ' -fuse-ld=lld-link '
+	if os.name == 'nt':
+		cmd += ' -fuse-ld=lld-link '
+	else:
+		cmd += ' -fuse-ld=lld '
 
 
-	for it in build_options.natvis_files:
-		assert(os.name == 'nt')
-		
-		cmd += f' -clang:--for-linker=/natvis:"{os.path.join(src_dir, it)}" '
+	if os.name == 'nt':
+		for it in build_options.natvis_files:
+			cmd += f' -clang:--for-linker=/natvis:"{os.path.join(src_dir, it)}" '
 
 
 	if build_options.use_clang_cl:
@@ -264,6 +281,21 @@ def build_linker_command_line(build_options):
 			cmd += f' -clang:--for-linker=/LIBPATH:"{lib_path}" '
 		else:
 			cmd += f' --library-directory="{lib_path}" '
+
+
+	for lib in build_options.libraries:
+
+		if os.name != 'posix':
+			if lib.link_statically:
+				raise Exception("link_statically is only supported on Linux")
+
+		if build_options.use_clang_cl:
+			cmd += f' /clang:-l{lib.name} '
+		else:
+			if lib.link_statically:
+				cmd += f' -l:{lib.name} '
+			else:
+				cmd += f' -l{lib.name} '
 
 
 	if build_options.use_clang_cl and build_options.use_windows_subsystem:
@@ -312,10 +344,8 @@ def build_clang_command_line_for_source(build_options, source):
 
 	# cmd += ' -ferror-limit=0 '
 
-
-	# Typerminal doesn't support support Windows Console API coloring stuff. 
-	add_flag('-fansi-escape-codes')
 	# We always want our output to be colored
+	add_flag('-fansi-escape-codes')
 	add_flag('-fcolor-diagnostics')
 
 	if build_options.use_clang_cl:

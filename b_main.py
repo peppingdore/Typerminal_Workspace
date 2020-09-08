@@ -8,6 +8,11 @@ import ascii_colors
 import time
 import platform
 
+pc_name = platform.node()
+
+windows_pc_name = 'DESKTOP-EIUG5MQ'
+linux_pc_name = 'fridge'
+
 
 if os.name == 'nt':
 	additional_path_entries = [
@@ -181,14 +186,13 @@ def tlauncher():
 	st_path = os.path.join(os.environ["APPDATA"], '.minecraft/tlauncher.exe')
 	os.startfile(st_path)
 
+
 def count_typer_lines():
 	saved_cwd = os.getcwd();
 
-	pc_name = platform.node()
-
-	if pc_name == 'DESKTOP-EIUG5MQ':
+	if pc_name == windows_pc_name:
 		os.chdir("E:/Typer")
-	elif pc_name == 'fridge':
+	elif pc_name == linux_pc_name:
 		os.chdir("/home/peppingdore/Typerminal")
 
 	try:
@@ -250,4 +254,7 @@ def run_conhost_bypass(cmd):
 
 
 def copy_typer_exe_to_ship():
-	typer_commands.copy_file("E:/Typer/Runnable/Typerminal.exe", "E:/Typer_Ship/Typerminal.exe")
+	if pc_name == windows_pc_name:
+		typer_commands.copy_file("E:/Typer/Runnable/Typerminal.exe", "E:/Typer_Ship/Typerminal.exe")
+	elif pc_name == linux_pc_name:
+		typer_commands.copy_file("/home/peppingdore/Typerminal/Runnable/Typerminal.elf", "/home/peppingdore/Typer_Ship/Typerminal.elf")
