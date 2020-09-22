@@ -324,9 +324,18 @@ def build_clang_command_line_for_source(build_options, source):
 
 
 	cmd = 'clang-cl' if build_options.use_clang_cl else 'clang++'
-	
 
-	if build_options.disable_warnings:
+
+	use_msvc = True
+	
+	if build_options.use_clang_cl and use_msvc:
+		cmd = 'cl'
+
+
+	if use_msvc:
+		cmd += ' /FS ' # Fix PDB write issues.
+
+	if build_options.disable_warnings and not use_msvc:
 		cmd += ' -Wno-everything '
 
 
@@ -343,10 +352,6 @@ def build_clang_command_line_for_source(build_options, source):
 
 
 	# cmd += ' -ferror-limit=0 '
-
-	# We always want our output to be colored
-	add_flag('-fansi-escape-codes')
-	add_flag('-fcolor-diagnostics')
 
 	if build_options.use_clang_cl:
 		add_flag('/std:c++latest')

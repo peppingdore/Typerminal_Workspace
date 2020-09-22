@@ -30,9 +30,12 @@ if os.name == 'posix':
 	os.environ['PATH'] += os.pathsep + '/snap/bin'
 
 
+import hot_reloader
+
 
 import builder
-import hot_reloader
+hot_reloader.watch_module(builder)
+
 
 #import command_time_printer
 if True:
@@ -41,12 +44,11 @@ if True:
 else:
 	import run_only_wsl
 
-import b_syntax_proc
+# -- Moved b_syntax_proc to typer.py. 
+# import b_syntax_proc
+# hot_reloader.watch_module(b_syntax_proc)
 
-hot_reloader.watch_module(b_syntax_proc)
 
-
-hot_reloader.watch_module(builder)
 
 
 typer_ship_folder = "E:/Typer_Ship"
@@ -196,7 +198,7 @@ def count_typer_lines():
 		os.chdir("/home/peppingdore/Typerminal")
 
 	try:
-		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip --include-ext=h,cpp  --by-file src/b_lib/. src", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
+		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux --include-ext=h,cpp,py  --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
 	finally:
 		os.chdir(saved_cwd)
 
