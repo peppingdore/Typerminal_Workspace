@@ -49,6 +49,8 @@ class Build_Options:
 
 		self.use_clang_cl = False
 
+		self.use_msvc = False
+
 		self.use_windows_dynamic_crt = False
 		self.use_windows_crt_debug_version = False
 		self.use_windows_subsystem = False
@@ -326,7 +328,7 @@ def build_clang_command_line_for_source(build_options, source):
 	cmd = 'clang-cl' if build_options.use_clang_cl else 'clang++'
 
 
-	use_msvc = True
+	use_msvc = build_options.use_clang_cl and build_options.use_msvc
 	
 	if build_options.use_clang_cl and use_msvc:
 		cmd = 'cl'
@@ -344,6 +346,12 @@ def build_clang_command_line_for_source(build_options, source):
 		cmd += ' '
 		cmd += flag
 		cmd += ' '
+
+
+	# We always want our output to be colored
+	if not use_msvc:
+		add_flag('-fansi-escape-codes')
+		add_flag('-fcolor-diagnostics')
 
 
 	if build_options.use_clang_cl:
