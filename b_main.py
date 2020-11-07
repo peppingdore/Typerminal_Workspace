@@ -53,7 +53,7 @@ else:
 
 typer_ship_folder = "E:/Typer_Ship"
 
-typer_dev_folder = "E:/Typer"
+typer_dev_folder = "D:/Typer"
 typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
 
 
