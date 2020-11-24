@@ -16,9 +16,9 @@ linux_pc_name = 'fridge'
 
 if os.name == 'nt':
 	additional_path_entries = [
-		r'E:\\llvm\\build\\Debug\\bin', # For llvm-mca
-		r'E:\\Programs',
-		r'E:\\vcpkg',
+		r'D:\\llvm\\build\\Debug\\bin', # For llvm-mca
+		r'D:\\Programs',
+		r'D:\\vcpkg',
 		r'C:\\VulkanSDK\\1.2.135.0\\Bin',
 		r'C:\\Program Files\\Far Manager'
 	]
@@ -260,3 +260,4 @@ def copy_typer_exe_to_ship():
 		typer_commands.copy_file("E:/Typer/Runnable/Typerminal.exe", "E:/Typer_Ship/Typerminal.exe")
 	elif pc_name == linux_pc_name:
 		typer_commands.copy_file("/home/peppingdore/Typerminal/Runnable/Typerminal.elf", "/home/peppingdore/Typer_Ship/Typerminal.elf")
+
