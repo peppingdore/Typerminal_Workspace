@@ -1,6 +1,6 @@
 import os
 import sys
-import typer_commands
+import typer
 import subprocess
 import typer
 from pathlib import Path
@@ -20,7 +20,8 @@ if os.name == 'nt':
 		r'D:\\Programs',
 		r'D:\\vcpkg',
 		r'C:\\VulkanSDK\\1.2.135.0\\Bin',
-		r'C:\\Program Files\\Far Manager'
+		r'C:\\Program Files\\Far Manager',
+		r'C:\\Users\\peppingdore\\AppData\\Local\\Android\\Sdk\\platform-tools'
 	]
 
 	for ent in additional_path_entries:
@@ -61,21 +62,21 @@ typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
 
 def copy_typer_to_ship():
 	try:
-		typer_commands.rmdir(typer_ship_folder, with_content = True)
+		typer.commands.rmdir(typer_ship_folder, with_content = True)
 	except:
 		pass
 		
-	typer_commands.mkdir(typer_ship_folder)
+	typer.commands.mkdir(typer_ship_folder)
 
 	try:
-		typer_commands.rmdir(os.path.join(typer_dev_runnable_folder, "python/__pycache__"), with_content = True)
-		typer_commands.rmdir(os.path.join(typer_dev_runnable_folder, "user_scripts/__pycache__"), with_content = True)
+		typer.commands.rmdir(os.path.join(typer_dev_runnable_folder, "python/__pycache__"), with_content = True)
+		typer.commands.rmdir(os.path.join(typer_dev_runnable_folder, "user_scripts/__pycache__"), with_content = True)
 	except:
 		pass
 
-	typer_commands.copy_directory(os.path.join(typer_dev_runnable_folder, "fonts"),        os.path.join(typer_ship_folder, "fonts"))
-	typer_commands.copy_directory(os.path.join(typer_dev_runnable_folder, "python"),       os.path.join(typer_ship_folder, "python"))
-	typer_commands.copy_directory(os.path.join(typer_dev_runnable_folder, "user_scripts"), os.path.join(typer_ship_folder, "user_scripts"))
+	typer.commands.copy_directory(os.path.join(typer_dev_runnable_folder, "fonts"),        os.path.join(typer_ship_folder, "fonts"))
+	typer.commands.copy_directory(os.path.join(typer_dev_runnable_folder, "python"),       os.path.join(typer_ship_folder, "python"))
+	typer.commands.copy_directory(os.path.join(typer_dev_runnable_folder, "user_scripts"), os.path.join(typer_ship_folder, "user_scripts"))
 
 	root_files_to_copy = [
 		'freetype.dll',
@@ -90,7 +91,7 @@ def copy_typer_to_ship():
 
 
 	for file in root_files_to_copy:
-		typer_commands.copy_file(os.path.join(typer_dev_runnable_folder, file), os.path.join(typer_ship_folder, file))
+		typer.commands.copy_file(os.path.join(typer_dev_runnable_folder, file), os.path.join(typer_ship_folder, file))
 
 
 
@@ -124,7 +125,8 @@ def find_vcvars_location():
 
 #Example usage: #run_vcvarsall("x64")
 def run_vcvarsall(args):
-	typer_commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
+	typer.typer_commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
+	# typer.commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
 
 
 
@@ -168,13 +170,13 @@ def print_directory_tree(path = '.', max_depth = 5):
 def typer_dev():
 	run_vcvarsall('x64')
 
-	typer_commands.cd('E:/Typer')
+	typer.commands.cd('E:/Typer')
 
 
 def vis_dev():
 	run_vcvarsall('x64')
 
-	typer_commands.cd('E:/Vis')
+	typer.commands.cd('E:/Vis')
 
 def open_sublime_text_packages_folder():
 	assert(os.name == 'nt')
@@ -198,7 +200,7 @@ def count_typer_lines():
 		os.chdir("/home/peppingdore/Typerminal")
 
 	try:
-		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux --include-ext=h,cpp,py --exclude-list-file=cloc_exclude_list.txt --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
+		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux --include-ext=h,cpp,py,mm --exclude-list-file=cloc_exclude_list.txt --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
 	finally:
 		os.chdir(saved_cwd)
 
@@ -252,12 +254,23 @@ def reboot():
 
 
 def run_conhost_bypass(cmd):
-	subprocess.run(cmd, stdout = sys.stdout, stderr = subprocess.STDOUT, stdin = sys.stdin)
+	subprocess.run(cmd, shell = True, stdout = sys.stdout, stderr = subprocess.STDOUT, stdin = sys.stdin)
 
 
 def copy_typer_exe_to_ship():
 	if pc_name == windows_pc_name:
-		typer_commands.copy_file("E:/Typer/Runnable/Typerminal.exe", "E:/Typer_Ship/Typerminal.exe")
+		typer.commands.copy_file("E:/Typer/Runnable/Typerminal.exe", "E:/Typer_Ship/Typerminal.exe")
 	elif pc_name == linux_pc_name:
-		typer_commands.copy_file("/home/peppingdore/Typerminal/Runnable/Typerminal.elf", "/home/peppingdore/Typer_Ship/Typerminal.elf")
+		typer.commands.copy_file("/home/peppingdore/Typerminal/Runnable/Typerminal.elf", "/home/peppingdore/Typer_Ship/Typerminal.elf")
+
+
+
+def penis():
+	import typer.terminal_x
+
+
+	for i in range(0, 1000):
+		typer.terminal_x.begin_frame()
+		typer.terminal_x.renderer_draw_rect(typer.terminal_x.Rect(0, 0, 400, 400), typer.terminal_x.rgba(255, 100, 100, 255))
+		typer.terminal_x.end_frame()
 
