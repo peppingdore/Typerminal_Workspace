@@ -266,11 +266,25 @@ def copy_typer_exe_to_ship():
 
 
 def penis():
-	import typer.terminal_x
+	import time
+	import math
+	from typer import terminal_x
 
+	t = time.time()
 
 	for i in range(0, 1000):
-		typer.terminal_x.begin_frame()
-		typer.terminal_x.renderer_draw_rect(typer.terminal_x.Rect(0, 0, 400, 400), typer.terminal_x.rgba(255, 100, 100, 255))
-		typer.terminal_x.end_frame()
+		terminal_x.begin_frame()
+		terminal_x.set_reserved_height(400)
+
+		
+		scale = math.sin(t)
+		scale = (scale + 1.0) / 2.0
+
+		offset = int(400 * scale);
+		offset = 0
+
+		terminal_x.renderer_draw_rect(terminal_x.Rect(0, 0 + offset, 400, 400 + offset), terminal_x.rgba(255, 100, 100, 255))
+		terminal_x.end_frame()
+		t += (time.time() - t)
+
 
