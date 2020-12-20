@@ -10,7 +10,7 @@ import platform
 
 pc_name = platform.node()
 
-windows_pc_name = 'DESKTOP-EIUG5MQ'
+windows_pc_name = 'DESKTOP-PT41GUN'
 linux_pc_name = 'fridge'
 
 
@@ -195,7 +195,7 @@ def count_typer_lines():
 	saved_cwd = os.getcwd();
 
 	if pc_name == windows_pc_name:
-		os.chdir("E:/Typer")
+		os.chdir("D:/Typer")
 	elif pc_name == linux_pc_name:
 		os.chdir("/home/peppingdore/Typerminal")
 
