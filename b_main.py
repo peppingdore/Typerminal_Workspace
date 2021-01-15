@@ -125,13 +125,14 @@ def find_vcvars_location():
 
 #Example usage: #run_vcvarsall("x64")
 def run_vcvarsall(args):
-	typer.typer_commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
-	# typer.commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
-
-def run_vcvarsall_new(args):
 	#typer.typer_commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
 	typer.commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
 
+
+def typer_dev():
+	assert(os.name == 'nt')
+	run_vcvarsall('x64')
+	typer.commands.cd('D:/Typer')
 
 
 
@@ -172,11 +173,6 @@ def print_directory_tree(path = '.', max_depth = 5):
 	traverse(path, 0)
 
 
-def typer_dev():
-	run_vcvarsall('x64')
-
-	typer.commands.cd('E:/Typer')
-
 
 def vis_dev():
 	run_vcvarsall('x64')
@@ -205,7 +201,7 @@ def count_typer_lines():
 		os.chdir("/home/peppingdore/Typerminal")
 
 	try:
-		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux --include-ext=h,cpp,py,mm --exclude-list-file=cloc_exclude_list.txt --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
+		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux,harfbuzz --include-ext=h,cpp,py,mm --exclude-list-file=cloc_exclude_list.txt --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
 	finally:
 		os.chdir(saved_cwd)
 
