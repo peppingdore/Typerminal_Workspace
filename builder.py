@@ -333,12 +333,21 @@ def build_clang_command_line_for_source(build_options, source):
 	if build_options.use_clang_cl and use_msvc:
 		cmd = 'cl'
 
+	if build_options.use_clang_cl and not use_msvc:
+		cmd += ' /Zc:dllexportinlines- '
 
 	if use_msvc:
 		cmd += ' /FS ' # Fix PDB write issues.
 
 	if build_options.disable_warnings and not use_msvc:
 		cmd += ' -Wno-everything '
+
+
+	# Clang doesn't report missing return by default. By I'd prefer it to.
+	
+	if not use_msvc:
+		cmd += ' -Werror=return-type '
+		cmd += ' -fno-strict-aliasing '
 
 
 	def add_flag(flag):

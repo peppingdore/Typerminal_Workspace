@@ -51,6 +51,10 @@ def to_year_fraction(date):
 
 def b_prompt():
 
+	return
+
+	# sys.stdout.write('واهُ عمرُ بْن الخطَّاب ')
+
 	sys.stdout.write(f'Day №{days_since_birth()} ')
 
 	current_path = Path.cwd().resolve()
@@ -67,6 +71,8 @@ def b_prompt():
 
 	if len(current_branch):
 		sys.stdout.write(f' {ascii_colors.green.background}{current_branch}{ascii_colors.reset_background_color}')
+
+	sys.stdout.write(f' {ascii_colors.yellow.background}       {ascii_colors.reset_background_color}')
 
 	sys.stdout.write(' $ ')
 
