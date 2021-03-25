@@ -51,8 +51,6 @@ def to_year_fraction(date):
 
 def b_prompt():
 
-	return
-
 	# sys.stdout.write('واهُ عمرُ بْن الخطَّاب ')
 
 	sys.stdout.write(f'Day №{days_since_birth()} ')
