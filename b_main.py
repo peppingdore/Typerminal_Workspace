@@ -10,12 +10,14 @@ import platform
 
 pc_name = platform.node()
 
+windows_laptop_name = 'LAPTOP-APR7OV7Q'
 windows_pc_name = 'DESKTOP-PT41GUN'
 linux_pc_name = 'fridge'
 
 
 if os.name == 'nt':
 	additional_path_entries = [
+		r'C:\\Programs',
 		r'D:\\llvm\\build\\Debug\\bin', # For llvm-mca
 		r'D:\\Programs',
 		r'D:\\vcpkg',
@@ -52,9 +54,14 @@ else:
 
 
 
-typer_ship_folder = "E:/Typer_Ship"
+if pc_name == windows_pc_name:
+	typer_ship_folder = "E:/Typer_Ship"
+	typer_dev_folder = "D:/Typer"
+elif pc_name == windows_laptop_name:
+	typer_ship_folder = "C:/Typer_Ship"
+	typer_dev_folder = "C:/Typer"
 
-typer_dev_folder = "D:/Typer"
+
 typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
 
 
@@ -225,13 +232,10 @@ def tlauncher():
 def count_typer_lines():
 	saved_cwd = os.getcwd();
 
-	if pc_name == windows_pc_name:
-		os.chdir("D:/Typer")
-	elif pc_name == linux_pc_name:
-		os.chdir("/home/peppingdore/Typerminal")
+	os.chdir(typer_dev_folder)
 
 	try:
-		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux,harfbuzz --include-ext=h,cpp,py,mm --exclude-list-file=cloc_exclude_list.txt --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
+		subprocess.run(r"cloc --exclude-dir=detours,V-Tune,freetype,gl,stb,include,optick,cmake-build-debug,shaderc,vulkan,Tracy,python_headers,unicode,ft,icu,clip,python_lib_windows,python_lib_osx,python_lib_linux,harfbuzz,gl_headers,examples --include-ext=h,cpp,py,mm --exclude-list-file=cloc_exclude_list.txt --by-file src/b_lib/. src Runnable/python", shell = True, stdin = sys.stdin, stdout = sys.stdout, stderr = subprocess.STDOUT)
 	finally:
 		os.chdir(saved_cwd)
 
