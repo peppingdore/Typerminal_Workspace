@@ -135,12 +135,10 @@ def run_vcvarsall(args):
 	#typer.typer_commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
 	typer.commands.run_batch_file_and_import_its_environment_variables_to_current_process(os.path.join(find_vcvars_location(), "vcvarsall.bat"), args)
 
-typer_path = 'D:/Typer'
-
 def typer_dev():
 	assert(os.name == 'nt')
 	run_vcvarsall('x64')
-	typer.commands.cd(typer_path)
+	typer.commands.cd(typer_dev_folder)
 
 
 
