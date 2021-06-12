@@ -56,6 +56,7 @@ class Build_Options:
 		self.use_windows_subsystem = False
 
 		self.avx = False
+		self.aes = True
 
 		self.output_assembly = False
 
@@ -86,8 +87,6 @@ def build(build_options):
 		assert(not build_options.use_windows_dynamic_crt)
 		assert(not build_options.use_windows_crt_debug_version)
 		assert(not build_options.use_windows_subsystem)
-
-
 
 	result = Build_Result()
 
@@ -232,6 +231,10 @@ def build_linker_command_line(build_options):
 		linker_inputs += get_source_output_path(source)
 		linker_inputs += '" '
 
+	for lib in build_options.libraries:
+		if lib.link_statically:
+			linker_inputs += f' {lib.name} '
+
 
 	cmd = 'clang-cl' if build_options.use_clang_cl else 'clang++'
 
@@ -239,8 +242,6 @@ def build_linker_command_line(build_options):
 
 	if os.name == 'nt':
 		cmd += ' -fuse-ld=lld-link '
-	else:
-		cmd += ' -fuse-ld=lld '
 
 
 	if os.name == 'nt':
@@ -289,14 +290,12 @@ def build_linker_command_line(build_options):
 
 		if os.name != 'posix':
 			if lib.link_statically:
-				raise Exception("link_statically is only supported on Linux")
+				raise Exception("link_statically is only supported on POSIX")
 
 		if build_options.use_clang_cl:
 			cmd += f' /clang:-l{lib.name} '
 		else:
-			if lib.link_statically:
-				cmd += f' -l:{lib.name} '
-			else:
+			if not lib.link_statically:
 				cmd += f' -l{lib.name} '
 
 
@@ -407,7 +406,7 @@ def build_clang_command_line_for_source(build_options, source):
 		if build_options.use_clang_cl:
 			add_flag('/Zi')
 		else:
-			add_flag('-gcodeview')
+			# add_flag('-gcodeview')
 			add_flag('-g')
 
 	for inc in build_options.include_directories:
@@ -425,6 +424,17 @@ def build_clang_command_line_for_source(build_options, source):
 			add_flag(f'/arch:AVX')
 		else:
 			add_flag(f'-mavx')
+
+
+	if build_options.aes:
+		if build_options.use_clang_cl:
+			if not use_msvc:
+				add_flag(f'-clang:-maes')
+			else:
+				pass # Does msvc enable aes by default? 
+		else:
+			add_flag(f'-maes')
+
 
 
 
@@ -479,7 +489,7 @@ def build_clang_command_line_for_source(build_options, source):
 	cmd += '" '
 
 
-	#print(cmd)
+	# print(cmd)
 
 	return cmd
 
