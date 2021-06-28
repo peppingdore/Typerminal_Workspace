@@ -29,8 +29,14 @@ def get_active_branch_name():
 # Error is ~4 hours i think
 birth_date = datetime.fromisoformat('2001-04-19T16:00:00.000000')
 
+ship_date = datetime.fromisoformat('2021-09-30T23:00:00.000000')
+
 def days_since_birth():
 	delta_date = datetime.today() - birth_date 
+	return delta_date.days
+
+def days_till_ship():
+	delta_date = ship_date - datetime.today()
 	return delta_date.days
 
 '''
@@ -53,7 +59,7 @@ def b_prompt():
 
 	# sys.stdout.write('واهُ عمرُ بْن الخطَّاب ')
 
-	sys.stdout.write(f'Day №{days_since_birth()} ')
+	sys.stdout.write(f'{days_till_ship()} days left. ')
 
 	current_path = Path.cwd().resolve()
 	sys.stdout.write(f'{ascii_colors.yellow}{current_path}{ascii_colors.reset_foreground_color}')

@@ -56,7 +56,7 @@ class Build_Options:
 		self.use_windows_subsystem = False
 
 		self.avx = False
-		self.aes = True
+		self.aes = False
 
 		self.output_assembly = False
 
