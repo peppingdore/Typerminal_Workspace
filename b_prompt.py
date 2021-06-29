@@ -29,7 +29,7 @@ def get_active_branch_name():
 # Error is ~4 hours i think
 birth_date = datetime.fromisoformat('2001-04-19T16:00:00.000000')
 
-ship_date = datetime.fromisoformat('2021-09-30T23:00:00.000000')
+ship_date = datetime.fromisoformat('2021-08-30T01:00:00.000000')
 
 def days_since_birth():
 	delta_date = datetime.today() - birth_date 
