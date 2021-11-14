@@ -112,15 +112,19 @@ def build(build_options):
 	max_source_length_without_ellipsis = max_source_length - len('...')
 	max_actual_source_length = min((max(map(lambda x: len(x), build_options.sources), default = 0), max_source_length))
 
+	print_result_lock = threading.Lock()
+
+	print("Following files are passed into the compiler:")
+	for source in build_options.sources:
+		print(f"  {source}")
 
 	for source in build_options.sources:
 
 		cmd_line = build_clang_command_line_for_source(build_options, source)
 
-		print_result_lock = threading.Lock()
 
 		def build_thread_proc(source):
-			
+
 			source_compilation_start_time = time.perf_counter()
 			run_result = subprocess.run(cmd_line, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, stdin = subprocess.DEVNULL, shell = True)
 			source_compilation_time = time.perf_counter() - source_compilation_start_time
@@ -183,8 +187,10 @@ def build(build_options):
 		threads.append(build_thread)
 
 
-	for thread in threads:
-		thread.join()
+
+	for t in threads:
+		t.join()
+
 
 	if any_failed_source or build_options.output_assembly:
 		return result
@@ -203,7 +209,9 @@ def build(build_options):
 
 	print(f'{ascii_colors.rgb(*linking_result_title_background).background}{ascii_colors.rgb(0, 0, 0).foreground}--- {linking_result_title}{ascii_colors.reset_background_color}{ascii_colors.reset_foreground_color}')
 
-	print(run_result.stdout.decode('utf-8', errors = 'ignore'))
+
+	if not succeeded or not build_options.ignore_linker_output_on_success:
+		print(run_result.stdout.decode('utf-8', errors = 'ignore'))
 
 	if succeeded:
 		print(f'{ascii_colors.yellow}{get_linker_output_path(build_options)}{ascii_colors.reset_foreground_color}\n')

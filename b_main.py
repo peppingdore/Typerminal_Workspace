@@ -13,6 +13,7 @@ pc_name = platform.node()
 windows_laptop_name = 'LAPTOP-APR7OV7Q'
 windows_pc_name = 'DESKTOP-PT41GUN'
 linux_pc_name = 'fridge'
+countryside_pc_name = 'DESKTOP-RQJMJL7'
 
 
 if os.name == 'nt':
@@ -59,6 +60,9 @@ if pc_name == windows_pc_name:
 	typer_dev_folder = "D:/Typer"
 elif pc_name == windows_laptop_name:
 	typer_ship_folder = "C:/Typer_Ship"
+	typer_dev_folder = "C:/Typer"
+elif pc_name == countryside_pc_name:
+	typer_ship_folder = "C:/Users/79969/Desktop/Typer_Ship"
 	typer_dev_folder = "C:/Typer"
 
 
