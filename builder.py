@@ -114,7 +114,7 @@ def build(build_options):
 
 	print_result_lock = threading.Lock()
 
-	print("Following files are passed into the compiler:")
+	print("Compiling:")
 	for source in build_options.sources:
 		print(f"  {source}")
 
