@@ -34,11 +34,9 @@ if os.name == 'posix':
 	os.environ['PATH'] += os.pathsep + '/snap/bin'
 
 
+
+
 import hot_reloader
-
-
-import builder
-hot_reloader.watch_module(builder)
 
 
 #import command_time_printer
@@ -58,15 +56,23 @@ else:
 if pc_name == windows_pc_name:
 	typer_ship_folder = "E:/Typer_Ship"
 	typer_dev_folder = "D:/Typer"
+	b_lib_folder = "D:/b_lib"
 elif pc_name == windows_laptop_name:
 	typer_ship_folder = "C:/Typer_Ship"
 	typer_dev_folder = "C:/Typer"
+	b_lib_folder = "D:/b_lib"
 elif pc_name == countryside_pc_name:
 	typer_ship_folder = "C:/Users/79969/Desktop/Typer_Ship"
 	typer_dev_folder = "C:/Typer"
 
 
 typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
+
+sys.path.append(b_lib_folder)
+import b_python
+
+def compile_cpp(*args):
+	b_python.building.compile_cpp_file(*args)
 
 
 
