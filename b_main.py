@@ -64,6 +64,7 @@ elif pc_name == windows_laptop_name:
 elif pc_name == countryside_pc_name:
 	typer_ship_folder = "C:/Users/79969/Desktop/Typer_Ship"
 	typer_dev_folder = "C:/Typer"
+	b_lib_folder = "C:/b_lib"
 
 
 typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
