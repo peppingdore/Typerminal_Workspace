@@ -72,9 +72,7 @@ typer_dev_runnable_folder = os.path.join(typer_dev_folder, "Runnable")
 sys.path.append(b_lib_folder)
 import b_python
 
-def compile_cpp(*args):
-	b_python.building.compile_cpp_file(*args)
-
+compiler = b_python.compiler
 
 
 
